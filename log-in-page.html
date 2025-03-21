@@ -1,0 +1,79 @@
+<html>
+<head>
+<style>
+    body {
+            font-family: "Gill Sans", sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #c4c4c4;
+        }
+    h1 {color:black; text-align: center; margin-bottom: 0;}
+    h2 {color:black; text-align: center}
+    p  {color:black; text-align: center}
+    button {
+            padding: 10px 20px;
+            background-color: #9fefe4;
+            color: rgb(0, 0, 0);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    input[type="text"] {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 250px;
+        }
+</style>
+</head>
+<body>
+
+
+    <h2>Email</h2>
+    <input type="text" id="email" placeholder="Enter...">
+    <br>
+    <h2>Password</h2>
+    <input type="text" id="password" placeholder="Enter...">
+    <br>
+    <button id="log-in-button">Log In</button>
+
+    <p id="message"></p>
+    <p id="message2"></p>
+
+    <script>
+        document.getElementById("log-in-button").onclick = function() {
+        const users = [
+            { email: "test@example.com", password: "password123" },
+            { email: "user@example.com", password: "securepass" }
+        ];
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        const user = users.find(user => user.email === email && user.password === password);
+
+       
+
+        if (user) {
+            document.getElementById("message").textContent = "Login successful!";
+            document.getElementById("message").style.color = "green";
+            document.getElementById("message2").textContent = "Redirecting...";
+            document.getElementById("message2").style.color = "black";
+            
+            setTimeout(function() { window.location.href = "movies-page.html";}, 2000);
+            
+            
+        } else {
+            document.getElementById("message").textContent = "Invalid email or password";
+            document.getElementById("message").style.color = "red";
+            document.getElementById("message2").textContent = "Try again!"
+            document.getElementById("message2").style.color = "red";
+        }
+        }; 
+    </script>
+</body>
+</html>
