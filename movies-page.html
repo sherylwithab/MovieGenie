@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies Page - Movie Suggestor</title>
+    <style>
+        body {
+            font-family: "Gill Sans", sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #210F37;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
+
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            padding-left: 20px;
+            text-align: center;
+        }
+
+        .search-bar {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #89a5ad;
+            text-align: center;
+        }
+
+        .search-input {
+            padding: 10px;
+            font-size: 16px;
+            width: 300px;
+            margin-right: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .search-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #A55B4B;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .movie-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px;
+            justify-items: center;
+            width: 100%;
+            max-width: 960px;
+        }
+
+        .movie-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 250px;
+        }
+
+        img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .refresh-button {
+            margin-top: 20px;
+            padding: 10px;
+            cursor: pointer;
+            background-color: #A55B4B;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .settings-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 24px;
+            color: white;
+        }
+
+        .settings-menu {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+        }
+
+        .settings-menu a {
+            display: block;
+            text-decoration: none;
+            color: black;
+            padding: 5px 10px;
+        }
+        h1 {
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Movies Page</h1>
+
+    <div class="search-bar">
+        <input type="text" class="search-input" id="search-input" placeholder="Search movies on IMDb...">
+        <button class="search-button" onclick="searchIMDb()">Search IMDb</button>
+    </div>
+
+    <div class="movie-container" id="movie-container"></div>
+
+    <button class="refresh-button" onclick="refreshPage()">&#8635; Refresh Movies</button>
+
+    <div class="settings-button" onclick="toggleSettings()">&#9881;</div>
+
+    <div class="settings-menu" id="settings-menu">
+        <a href="#" onclick="logout()">Log Out</a>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchMovies(); 
+        });
+
+        async function fetchMovies() {
+        const genres = JSON.parse(sessionStorage.getItem("userGenres"));
+        if (!genres || genres.length === 0) {
+            console.error("No genres found in session storage");
+            return;
+        }
+
+        try {
+           
+            const genreParam = JSON.stringify(genres); 
+            const response = await fetch(`http://localhost:3000/movies?genre=${genreParam}&random=true`);
+            const movies = await response.json();
+            displayMovies(movies);
+        } catch (error) {
+            console.error("Error fetching movies:", error);
+        }
+    }
+
+
+        function displayMovies(movies) {
+            const container = document.getElementById("movie-container");
+            container.innerHTML = ""; 
+
+            movies.forEach(movie => {
+                const movieCard = document.createElement("div");
+                movieCard.classList.add("movie-card");
+
+                movieCard.innerHTML = `
+                    <div class="title">${movie.Title}</div>
+                    <img src="${movie.Poster_url}" alt="${movie.Title}">
+                    <p><strong>Genre:</strong> ${movie.Genre}</p>
+                    <p><strong>Director:</strong> ${movie.Director}</p>
+                    <p><strong>Stars:</strong> ${movie.Actors}</p>
+                `;
+            movieCard.addEventListener("click", () => {
+                if (movie.Imdb_link) {
+                    window.open(movie.Imdb_link, "_blank");
+                }
+            });
+                container.appendChild(movieCard);
+            });
+        }
+
+        function refreshPage() {
+            const container = document.getElementById("movie-container");
+            container.innerHTML = "<p>Loading...</p>"; 
+            fetchMovies();
+        }
+
+        function toggleSettings() {
+            const menu = document.getElementById("settings-menu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        }
+
+        function logout() {
+            alert("Logging out...");
+            window.location.href = "main-page.html";
+        }
+
+        
+        function searchIMDb() {
+            const searchTerm = document.getElementById("search-input").value.trim();
+
+            if (searchTerm) {
+                const imdbSearchURL = `https://www.imdb.com/find?q=${encodeURIComponent(searchTerm)}&ref_=nv_sr_sm`;
+                window.open(imdbSearchURL, "_blank"); 
+            } else {
+                alert("Please enter a search term.");
+            }
+        }
+    </script>
+
+</body>
+
+</html>

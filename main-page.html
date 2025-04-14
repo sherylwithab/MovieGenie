@@ -9,15 +9,15 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
-            background-color: #c4c4c4;
+            background-color: #210F37;
         }
-    h1 {color:black; text-align: center; margin-bottom: 0;}
-    h2 {color:black; text-align: center}
-    p  {color:black; text-align: center}
+    h1 {color:white; text-align: center; margin-bottom: 0;}
+    h2 {color:white; text-align: center}
+    p  {color:white; text-align: center}
     button {
             padding: 10px 20px;
-            background-color: #9fefe4;
-            color: rgb(0, 0, 0);
+            background-color: #A55B4B;
+            color: rgb(255, 255, 255);
             border: none;
             border-radius: 4px;
             cursor: pointer;
@@ -25,13 +25,12 @@
 </style>
 </head>
 <body>
-    <h1>Movie Suggestor</h1>
-    <p>Slogan</p>
+    <h1>Movie Genie</h1>
+    <p>Find your new favorite movie!</p>
     <button id="log-in-button">Log In</button>
     <br>
     <button id="sign-up-button">Sign Up</button>
     <br>
-    <button id = "guest-button"; style = "background-color: white;"> Continue as Guest</button>
    
    <script>
         document.getElementById("log-in-button").onclick = function() {
@@ -39,9 +38,6 @@
         };
         document.getElementById("sign-up-button").onclick = function() {
             window.location.href = "sign-up-page.html";
-        };
-        document.getElementById("guest-button").onclick = function() {
-            window.location.href = "movies-page.html";
         };
     </script>
 

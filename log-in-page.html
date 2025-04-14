@@ -9,20 +9,20 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
-            background-color: #c4c4c4;
+            background-color: #210F37;
         }
-    h1 {color:black; text-align: center; margin-bottom: 0;}
-    h2 {color:black; text-align: center}
-    p  {color:black; text-align: center}
+    h1 {color:white; text-align: center; margin-bottom: 0;}
+    h2 {color:white; text-align: center}
+    p  {color:white; text-align: center}
     button {
             padding: 10px 20px;
-            background-color: #9fefe4;
-            color: rgb(0, 0, 0);
+            background-color: #A55B4B;
+            color: rgb(255, 255, 255);
             border: none;
             border-radius: 4px;
             cursor: pointer;
         }
-    input[type="text"] {
+    input {
             padding: 10px;
             margin: 10px 0;
             border: 1px solid #ccc;
@@ -38,7 +38,7 @@
     <input type="text" id="email" placeholder="Enter...">
     <br>
     <h2>Password</h2>
-    <input type="text" id="password" placeholder="Enter...">
+    <input type="password" id="password" placeholder="Enter...">
     <br>
     <button id="log-in-button">Log In</button>
 
@@ -46,34 +46,36 @@
     <p id="message2"></p>
 
     <script>
+       
         document.getElementById("log-in-button").onclick = function() {
-        const users = [
-            { email: "test@example.com", password: "password123" },
-            { email: "user@example.com", password: "securepass" }
-        ];
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
+        fetch('http://localhost:3000/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById("message").textContent = "Login successful!";
+                if (data.genres) {
+                    const genres = data.genres.split(",");  
+                    sessionStorage.setItem('userGenres', JSON.stringify(genres));
+                }
+                setTimeout(function () {
+                        window.location.href = "movies-page.html";  
+                    }, 2000);
 
-        const user = users.find(user => user.email === email && user.password === password);
+            } else {
+                document.getElementById("message").textContent = "Invalid email or password.";
+            }
+        })
+        .catch(error => console.error('Error:', error));
+        };
 
-       
-
-        if (user) {
-            document.getElementById("message").textContent = "Login successful!";
-            document.getElementById("message").style.color = "green";
-            document.getElementById("message2").textContent = "Redirecting...";
-            document.getElementById("message2").style.color = "black";
-            
-            setTimeout(function() { window.location.href = "movies-page.html";}, 2000);
-            
-            
-        } else {
-            document.getElementById("message").textContent = "Invalid email or password";
-            document.getElementById("message").style.color = "red";
-            document.getElementById("message2").textContent = "Try again!"
-            document.getElementById("message2").style.color = "red";
-        }
-        }; 
     </script>
 </body>
 </html>
